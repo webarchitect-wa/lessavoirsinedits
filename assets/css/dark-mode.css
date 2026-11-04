@@ -6,20 +6,65 @@
  * l'ordre de chargement des feuilles de style n'a donc pas d'importance.
  */
 
+/*
+ * Palette sombre dérivée de la charte (violet + corail), pas un simple
+ * inversement noir/blanc : le fond reprend une teinte violet très foncé
+ * (dérivée de #330033) et les accents gardent l'orange/corail de la marque.
+ */
 @media (prefers-color-scheme: dark) {
 	:root:not([data-theme="light"]) {
-		--wp--preset--color--base: #16181a;
-		--wp--preset--color--contrast: #f2f1ec;
-		--wp--preset--color--accent-4: #a8a8a8;
-		--wp--preset--color--accent-5: #1f2124;
+		--wp--preset--color--base: #24091f;
+		--wp--preset--color--contrast: #f6ece7;
+		--wp--preset--color--accent-4: #e3a79f;
+		--wp--preset--color--accent-5: #341233;
+
+		--wp--preset--color--dark-purple: #f0d9ea;
+		--wp--preset--color--dark-teal: #cdeae7;
+		--wp--preset--color--text-primary: #ecdfe8;
+		--wp--preset--color--text-secondary: #d2b8cc;
+		--wp--preset--color--text-light: #a884a0;
+		--wp--preset--color--surface-light: #341233;
+		--wp--preset--color--surface-medium: #3d1740;
+		--wp--preset--color--border-light: #5a2c52;
 	}
 }
 
 :root[data-theme="dark"] {
-	--wp--preset--color--base: #16181a;
-	--wp--preset--color--contrast: #f2f1ec;
-	--wp--preset--color--accent-4: #a8a8a8;
-	--wp--preset--color--accent-5: #1f2124;
+	--wp--preset--color--base: #24091f;
+	--wp--preset--color--contrast: #f6ece7;
+	--wp--preset--color--accent-4: #e3a79f;
+	--wp--preset--color--accent-5: #341233;
+
+	--wp--preset--color--dark-purple: #f0d9ea;
+	--wp--preset--color--dark-teal: #cdeae7;
+	--wp--preset--color--text-primary: #ecdfe8;
+	--wp--preset--color--text-secondary: #d2b8cc;
+	--wp--preset--color--text-light: #a884a0;
+	--wp--preset--color--surface-light: #341233;
+	--wp--preset--color--surface-medium: #3d1740;
+	--wp--preset--color--border-light: #5a2c52;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) .lsi-header-nav-band {
+		background: linear-gradient(135deg, var(--wp--preset--color--accent-coral) 0%, var(--wp--preset--color--primary-orange) 100%);
+	}
+}
+
+:root[data-theme="dark"] .lsi-header-nav-band {
+	background: linear-gradient(135deg, var(--wp--preset--color--accent-coral) 0%, var(--wp--preset--color--primary-orange) 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) .wc-block-product-template .wc-block-product,
+	:root:not([data-theme="light"]) .woocommerce ul.products li.product {
+		background: var(--wp--preset--color--surface-light);
+	}
+}
+
+:root[data-theme="dark"] .wc-block-product-template .wc-block-product,
+:root[data-theme="dark"] .woocommerce ul.products li.product {
+	background: var(--wp--preset--color--surface-light);
 }
 
 body {
@@ -61,4 +106,15 @@ body {
 .lsi-dark-mode-toggle:focus-visible {
 	outline: 2px solid var(--wp--preset--color--accent-4);
 	outline-offset: 2px;
+}
+
+/* Logo du header : encre foncée illisible sur fond sombre, on l'inverse */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) .lsi-site-header .lsi-site-logo img {
+		filter: brightness(0) invert(1);
+	}
+}
+
+:root[data-theme="dark"] .lsi-site-header .lsi-site-logo img {
+	filter: brightness(0) invert(1);
 }

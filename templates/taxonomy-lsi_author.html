@@ -1,0 +1,40 @@
+<!-- wp:template-part {"slug":"header","theme":"lessavoirsinedits"} /-->
+
+<!-- wp:group {"tagName":"main","layout":{"type":"constrained"}} -->
+<main class="wp-block-group">
+
+	<!-- wp:group {"align":"wide","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group alignwide">
+		<!-- wp:woocommerce/breadcrumbs /-->
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:group {"align":"wide","className":"lsi-section","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group alignwide lsi-section">
+		<!-- wp:pattern {"slug":"lessavoirsinedits/author-banner"} /-->
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:group {"align":"wide","className":"lsi-section","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group alignwide lsi-section">
+		<!-- wp:heading {"level":2} -->
+		<h2>Ses livres</h2>
+		<!-- /wp:heading -->
+
+		<!-- wp:woocommerce/product-collection {"queryId":5,"query":{"perPage":8,"pages":0,"offset":0,"postType":"product","order":"desc","orderBy":"date","search":"","exclude":[],"inherit":true,"taxQuery":[],"isProductCollectionBlock":true,"woocommerceStockStatus":["instock","outofstock","onbackorder"]},"tagName":"div","displayLayout":{"type":"flex","columns":4,"shrinkColumns":true},"align":"wide"} -->
+		<div class="wp-block-woocommerce-product-collection alignwide">
+			<!-- wp:woocommerce/product-template -->
+				<!-- wp:woocommerce/product-image {"showSaleBadge":false,"imageSizing":"thumbnail","isDescendentOfQueryLoop":true} /-->
+				<!-- wp:post-title {"textAlign":"left","level":3,"isLink":true,"fontSize":"medium"} /-->
+				<!-- wp:woocommerce/product-price {"isDescendentOfQueryLoop":true,"fontSize":"small"} /-->
+				<!-- wp:woocommerce/product-button {"isDescendentOfQueryLoop":true,"fontSize":"small"} /-->
+			<!-- /wp:woocommerce/product-template -->
+		</div>
+		<!-- /wp:woocommerce/product-collection -->
+	</div>
+	<!-- /wp:group -->
+
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","theme":"lessavoirsinedits"} /-->

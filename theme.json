@@ -1,6 +1,211 @@
 {
 	"$schema": "https://schemas.wp.org/wp/6.7/theme.json",
 	"version": 3,
-	"settings": {},
-	"styles": {}
+	"settings": {
+		"color": {
+			"palette": [
+				{
+					"color": "#FAE397",
+					"name": "Or clair",
+					"slug": "primary-gold"
+				},
+				{
+					"color": "#FF9900",
+					"name": "Orange",
+					"slug": "primary-orange"
+				},
+				{
+					"color": "#df635a",
+					"name": "Corail",
+					"slug": "accent-coral"
+				},
+				{
+					"color": "#330033",
+					"name": "Violet foncé",
+					"slug": "dark-purple"
+				},
+				{
+					"color": "#003333",
+					"name": "Vert foncé",
+					"slug": "dark-teal"
+				},
+				{
+					"color": "#f0f0f0",
+					"name": "Gris clair",
+					"slug": "surface-light"
+				},
+				{
+					"color": "#f5f5f5",
+					"name": "Gris moyen",
+					"slug": "surface-medium"
+				},
+				{
+					"color": "#333333",
+					"name": "Texte principal",
+					"slug": "text-primary"
+				},
+				{
+					"color": "#555555",
+					"name": "Texte secondaire",
+					"slug": "text-secondary"
+				},
+				{
+					"color": "#999999",
+					"name": "Texte clair",
+					"slug": "text-light"
+				},
+				{
+					"color": "#e0e0e0",
+					"name": "Bordure légère",
+					"slug": "border-light"
+				},
+				{
+					"color": "#2a2522",
+					"name": "Charbon (footer)",
+					"slug": "footer-dark"
+				}
+			]
+		},
+		"typography": {
+			"fontFamilies": [
+				{
+					"name": "Playfair Display",
+					"slug": "playfair",
+					"fontFamily": "'Playfair Display', Georgia, 'Times New Roman', serif",
+					"fontFace": [
+						{
+							"src": [ "file:./assets/fonts/playfair-display/PlayfairDisplay-normal.woff2" ],
+							"fontWeight": "400 900",
+							"fontStyle": "normal",
+							"fontFamily": "Playfair Display"
+						},
+						{
+							"src": [ "file:./assets/fonts/playfair-display/PlayfairDisplay-italic.woff2" ],
+							"fontWeight": "400 900",
+							"fontStyle": "italic",
+							"fontFamily": "Playfair Display"
+						}
+					]
+				},
+				{
+					"name": "Poppins",
+					"slug": "poppins",
+					"fontFamily": "Poppins, 'Segoe UI', Arial, sans-serif",
+					"fontFace": [
+						{
+							"src": [ "file:./assets/fonts/poppins/Poppins-400.woff2" ],
+							"fontWeight": "400",
+							"fontStyle": "normal",
+							"fontFamily": "Poppins"
+						},
+						{
+							"src": [ "file:./assets/fonts/poppins/Poppins-600.woff2" ],
+							"fontWeight": "600",
+							"fontStyle": "normal",
+							"fontFamily": "Poppins"
+						},
+						{
+							"src": [ "file:./assets/fonts/poppins/Poppins-700.woff2" ],
+							"fontWeight": "700",
+							"fontStyle": "normal",
+							"fontFamily": "Poppins"
+						}
+					]
+				},
+				{
+					"name": "Corps de texte",
+					"slug": "brand-body",
+					"fontFamily": "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+				}
+			]
+		}
+	},
+	"styles": {
+		"typography": {
+			"fontFamily": "var:preset|font-family|brand-body"
+		},
+		"elements": {
+			"heading": {
+				"typography": {
+					"fontFamily": "var:preset|font-family|playfair",
+					"fontWeight": "700",
+					"lineHeight": "1.2"
+				}
+			},
+			"h1": {
+				"typography": {
+					"fontSize": "2.75rem"
+				},
+				"color": {
+					"text": "var:preset|color|dark-purple"
+				}
+			},
+			"h2": {
+				"typography": {
+					"fontSize": "2rem"
+				},
+				"color": {
+					"text": "var:preset|color|dark-purple"
+				}
+			},
+			"h3": {
+				"typography": {
+					"fontSize": "1.5rem"
+				},
+				"color": {
+					"text": "var:preset|color|dark-purple"
+				}
+			},
+			"h4": {
+				"typography": {
+					"fontSize": "1.125rem"
+				},
+				"color": {
+					"text": "var:preset|color|dark-purple"
+				}
+			},
+			"link": {
+				"color": {
+					"text": "var:preset|color|primary-orange"
+				},
+				"typography": {
+					"textDecoration": "none"
+				},
+				":hover": {
+					"color": {
+						"text": "var:preset|color|accent-coral"
+					},
+					"typography": {
+						"textDecoration": "underline"
+					}
+				}
+			},
+			"button": {
+				"color": {
+					"background": "var:preset|color|primary-orange",
+					"text": "var:preset|color|base"
+				},
+				"typography": {
+					"fontWeight": "600"
+				},
+				"border": {
+					"radius": "5px"
+				},
+				"spacing": {
+					"padding": {
+						"top": "12px",
+						"bottom": "12px",
+						"left": "30px",
+						"right": "30px"
+					}
+				},
+				":hover": {
+					"color": {
+						"background": "var:preset|color|accent-coral",
+						"text": "var:preset|color|base"
+					}
+				}
+			}
+		}
+	}
 }

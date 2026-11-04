@@ -1,0 +1,99 @@
+<!-- wp:template-part {"slug":"header","theme":"lessavoirsinedits"} /-->
+
+<!-- wp:group {"tagName":"main","className":"lsi-product-page","layout":{"type":"constrained"}} -->
+<main class="wp-block-group lsi-product-page">
+
+	<!-- wp:group {"align":"wide","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group alignwide">
+		<!-- wp:woocommerce/breadcrumbs /-->
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:group {"align":"wide","className":"lsi-product-top","layout":{"type":"flex","flexWrap":"wrap","verticalAlignment":"top"}} -->
+	<div class="wp-block-group alignwide lsi-product-top">
+
+		<!-- wp:group {"className":"lsi-product-cover"} -->
+		<div class="wp-block-group lsi-product-cover">
+			<!-- wp:woocommerce/product-image {"showSaleBadge":false} /-->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:group {"className":"lsi-product-details","layout":{"type":"constrained"}} -->
+		<div class="wp-block-group lsi-product-details">
+
+			<!-- wp:post-terms {"term":"product_cat","className":"lsi-product-category"} /-->
+
+			<!-- wp:post-title {"level":1,"isLink":false} /-->
+
+			<!-- wp:pattern {"slug":"lessavoirsinedits/product-subtitle-author"} /-->
+
+			<!-- wp:group {"className":"lsi-product-price","layout":{"type":"flex","flexWrap":"wrap","verticalAlignment":"center"}} -->
+			<div class="wp-block-group lsi-product-price">
+				<!-- wp:woocommerce/product-price {"isDescendentOfSingleProductTemplate":true,"fontSize":"x-large"} /-->
+				<!-- wp:paragraph {"className":"lsi-vat-note"} -->
+				<p class="lsi-vat-note">TVA 5,5 % incluse</p>
+				<!-- /wp:paragraph -->
+			</div>
+			<!-- /wp:group -->
+
+			<!-- wp:pattern {"slug":"lessavoirsinedits/product-specs"} /-->
+
+			<!-- wp:pattern {"slug":"lessavoirsinedits/product-interest-cta"} /-->
+
+		</div>
+		<!-- /wp:group -->
+
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:group {"align":"full","className":"lsi-presentation-band","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group alignfull lsi-presentation-band">
+		<!-- wp:group {"align":"wide","layout":{"type":"flex","flexWrap":"wrap","verticalAlignment":"top"}} -->
+		<div class="wp-block-group alignwide">
+
+			<!-- wp:group {"className":"lsi-presentation-text","layout":{"type":"constrained"}} -->
+			<div class="wp-block-group lsi-presentation-text">
+				<!-- wp:heading {"level":2} -->
+				<h2>Présentation</h2>
+				<!-- /wp:heading -->
+				<!-- wp:post-content /-->
+			</div>
+			<!-- /wp:group -->
+
+			<!-- wp:pattern {"slug":"lessavoirsinedits/product-author-card"} /-->
+
+		</div>
+		<!-- /wp:group -->
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:group {"align":"wide","className":"lsi-section","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group alignwide lsi-section">
+		<!-- wp:group {"className":"lsi-section-header","layout":{"type":"flex","justifyContent":"space-between"}} -->
+		<div class="wp-block-group lsi-section-header">
+			<!-- wp:heading {"level":2} -->
+			<h2>Dans la même veine</h2>
+			<!-- /wp:heading -->
+			<!-- wp:paragraph {"className":"lsi-section-link"} -->
+			<p class="lsi-section-link"><a href="/boutique/">Toute la boutique</a></p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:woocommerce/product-collection {"queryId":4,"query":{"perPage":4,"pages":1,"offset":0,"postType":"product","order":"asc","orderBy":"title","search":"","exclude":[],"inherit":false,"taxQuery":{},"isProductCollectionBlock":true,"featured":false,"woocommerceOnSale":false,"woocommerceStockStatus":["instock","onbackorder"],"woocommerceAttributes":[],"woocommerceHandPickedProducts":[],"filterable":false,"relatedBy":{"categories":true,"tags":true}},"tagName":"div","displayLayout":{"type":"flex","columns":4,"shrinkColumns":true},"collection":"woocommerce/product-collection/related","queryContextIncludes":["collection"]} -->
+		<div class="wp-block-woocommerce-product-collection">
+			<!-- wp:woocommerce/product-template -->
+				<!-- wp:woocommerce/product-image {"showSaleBadge":false,"imageSizing":"thumbnail","isDescendentOfQueryLoop":true} /-->
+				<!-- wp:post-title {"textAlign":"left","level":3,"isLink":true,"fontSize":"medium"} /-->
+				<!-- wp:woocommerce/product-price {"isDescendentOfQueryLoop":true,"fontSize":"small"} /-->
+				<!-- wp:woocommerce/product-button {"isDescendentOfQueryLoop":true,"fontSize":"small"} /-->
+			<!-- /wp:woocommerce/product-template -->
+		</div>
+		<!-- /wp:woocommerce/product-collection -->
+	</div>
+	<!-- /wp:group -->
+
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","theme":"lessavoirsinedits"} /-->
