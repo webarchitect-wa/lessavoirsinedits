@@ -1,0 +1,35 @@
+name: Deploy vers OVH
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Configurer la clé SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.OVH_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p 22 "${{ vars.OVH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Synchroniser le thème
+        run: |
+          rsync -avz --delete \
+            --exclude '.git/' \
+            --exclude '.github/' \
+            --exclude '.gitignore' \
+            --exclude 'README.md' \
+            -e "ssh -i ~/.ssh/deploy_key -p 22" \
+            ./ "${{ vars.OVH_USER }}@${{ vars.OVH_HOST }}:${{ vars.OVH_THEME_PATH }}/"
+
+      - name: Nettoyer la clé
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
