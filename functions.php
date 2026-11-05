@@ -39,45 +39,10 @@ if ( ! function_exists( 'lessavoirsinedits_enqueue_styles' ) ) {
 			wp_get_theme()->get( 'Version' )
 		);
 
-		wp_enqueue_style(
-			'lessavoirsinedits-dark-mode',
-			get_stylesheet_directory_uri() . '/assets/css/dark-mode.css',
-			array( 'lessavoirsinedits-brand' ),
-			wp_get_theme()->get( 'Version' )
-		);
 
-		wp_enqueue_script(
-			'lessavoirsinedits-dark-mode',
-			get_stylesheet_directory_uri() . '/assets/js/dark-mode.js',
-			array(),
-			wp_get_theme()->get( 'Version' ),
-			true
-		);
 	}
 }
 add_action( 'wp_enqueue_scripts', 'lessavoirsinedits_enqueue_styles', 20 );
-
-if ( ! function_exists( 'lessavoirsinedits_dark_mode_no_flash' ) ) {
-	/**
-	 * Applique le thème mémorisé (localStorage) avant le premier rendu,
-	 * pour éviter un flash de la mauvaise couleur au chargement.
-	 */
-	function lessavoirsinedits_dark_mode_no_flash() {
-		?>
-		<script>
-		( function () {
-			try {
-				var theme = localStorage.getItem( 'lsi-theme' );
-				if ( theme === 'dark' || theme === 'light' ) {
-					document.documentElement.setAttribute( 'data-theme', theme );
-				}
-			} catch ( e ) {}
-		} )();
-		</script>
-		<?php
-	}
-}
-add_action( 'wp_head', 'lessavoirsinedits_dark_mode_no_flash', 1 );
 
 /**
  * Champs complémentaires des livres (fiche produit) : sous-titre,
@@ -258,25 +223,159 @@ if ( ! function_exists( 'lessavoirsinedits_author_initials' ) ) {
  * coupe l'ajout au panier en AJAX pour que le clic ouvre bien le mail
  * au lieu d'ajouter silencieusement au panier.
  */
-if ( ! function_exists( 'lessavoirsinedits_interest_mailto' ) ) {
-	function lessavoirsinedits_interest_mailto( $product ) {
+/**
+ * URL du bouton « Je suis intéressé·e » : la page de demande de commande,
+ * avec le livre pré-sélectionné (?produit=ID).
+ */
+if ( ! function_exists( 'lessavoirsinedits_interest_url' ) ) {
+	function lessavoirsinedits_interest_url( $product ) {
 		if ( ! $product instanceof WC_Product ) {
 			return '';
 		}
-		$subject = sprintf( __( 'Intérêt pour : %s', 'lessavoirsinedits' ), $product->get_name() );
-		$body    = sprintf(
-			/* translators: %s: product URL */
-			__( "Bonjour,\n\nCe livre m'intéresse : %s\n\nMerci de me recontacter pour organiser la commande.", 'lessavoirsinedits' ),
-			get_permalink( $product->get_id() )
-		);
-		return 'mailto:' . antispambot( get_option( 'admin_email' ) )
-			. '?subject=' . rawurlencode( $subject )
-			. '&body=' . rawurlencode( $body );
+		$page = get_page_by_path( 'demande-de-commande' );
+		if ( ! $page ) {
+			return get_permalink( $product->get_id() );
+		}
+		return add_query_arg( 'produit', $product->get_id(), get_permalink( $page ) );
 	}
 }
 
+/**
+ * Formulaire de demande de commande (shortcode [lsi_commande_form]).
+ */
+add_shortcode( 'lsi_commande_form', function () {
+	$status    = isset( $_GET['commande'] ) ? sanitize_key( wp_unslash( $_GET['commande'] ) ) : '';
+	$preselect = isset( $_GET['produit'] ) ? absint( $_GET['produit'] ) : 0;
+	$products  = wc_get_products( array( 'status' => 'publish', 'limit' => -1, 'orderby' => 'title', 'order' => 'ASC' ) );
+
+	ob_start();
+	if ( 'ok' === $status ) {
+		echo '<p class="lsi-form-notice lsi-form-ok">' . esc_html__( 'Merci ! Votre demande a bien été envoyée. Nous revenons vers vous pour organiser la commande.', 'lessavoirsinedits' ) . '</p>';
+	} elseif ( 'erreur' === $status ) {
+		echo '<p class="lsi-form-notice lsi-form-error">' . esc_html__( 'Le formulaire est incomplet ou n’a pas pu être envoyé. Merci de vérifier les champs obligatoires.', 'lessavoirsinedits' ) . '</p>';
+	}
+	?>
+	<form class="lsi-commande-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+		<input type="hidden" name="action" value="lsi_commande">
+		<?php wp_nonce_field( 'lsi_commande', 'lsi_commande_nonce' ); ?>
+		<p class="lsi-hp" aria-hidden="true" style="position:absolute;left:-9999px;">
+			<label>Ne pas remplir : <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+		</p>
+
+		<p>
+			<label for="lsi-nom"><?php esc_html_e( 'Nom et prénom', 'lessavoirsinedits' ); ?> *</label>
+			<input id="lsi-nom" type="text" name="nom" required autocomplete="name">
+		</p>
+		<p>
+			<label for="lsi-email"><?php esc_html_e( 'Adresse email', 'lessavoirsinedits' ); ?> *</label>
+			<input id="lsi-email" type="email" name="email" required autocomplete="email">
+		</p>
+		<p>
+			<label for="lsi-tel"><?php esc_html_e( 'Téléphone (facultatif)', 'lessavoirsinedits' ); ?></label>
+			<input id="lsi-tel" type="tel" name="telephone" autocomplete="tel">
+		</p>
+		<p>
+			<label for="lsi-produit"><?php esc_html_e( 'Livre', 'lessavoirsinedits' ); ?> *</label>
+			<select id="lsi-produit" name="produit" required>
+				<option value=""><?php esc_html_e( 'Choisir un livre', 'lessavoirsinedits' ); ?></option>
+				<?php foreach ( $products as $product ) : ?>
+					<option value="<?php echo esc_attr( $product->get_id() ); ?>" <?php selected( $preselect, $product->get_id() ); ?>>
+						<?php echo esc_html( $product->get_name() ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</p>
+		<p>
+			<label for="lsi-quantite"><?php esc_html_e( 'Quantité', 'lessavoirsinedits' ); ?></label>
+			<input id="lsi-quantite" type="number" name="quantite" min="1" value="1">
+		</p>
+		<p>
+			<label for="lsi-mode"><?php esc_html_e( 'Envoi ou retrait', 'lessavoirsinedits' ); ?> *</label>
+			<select id="lsi-mode" name="mode" required>
+				<option value=""><?php esc_html_e( 'Choisir', 'lessavoirsinedits' ); ?></option>
+				<option value="envoi"><?php esc_html_e( 'Envoi', 'lessavoirsinedits' ); ?></option>
+				<option value="retrait"><?php esc_html_e( 'Retrait', 'lessavoirsinedits' ); ?></option>
+			</select>
+		</p>
+		<p>
+			<label for="lsi-message"><?php esc_html_e( 'Message (facultatif)', 'lessavoirsinedits' ); ?></label>
+			<textarea id="lsi-message" name="message" rows="4"></textarea>
+		</p>
+		<p class="lsi-form-consent">
+			<label>
+				<input type="checkbox" name="consent" value="1" required>
+				<?php esc_html_e( 'J’accepte que mes données servent uniquement à traiter ma demande. Elles ne sont ni revendues ni partagées.', 'lessavoirsinedits' ); ?> *
+			</label>
+		</p>
+		<p>
+			<button type="submit" class="lsi-interest-button"><?php esc_html_e( 'Envoyer ma demande', 'lessavoirsinedits' ); ?></button>
+		</p>
+	</form>
+	<?php
+	return ob_get_clean();
+} );
+
+/**
+ * Traitement du formulaire : vérifications, puis envoi d'un email à l'admin.
+ */
+function lessavoirsinedits_handle_commande() {
+	$back = wp_get_referer() ? wp_get_referer() : home_url( '/demande-de-commande/' );
+	$back = remove_query_arg( 'commande', $back );
+
+	$fail = function () use ( $back ) {
+		wp_safe_redirect( add_query_arg( 'commande', 'erreur', $back ) );
+		exit;
+	};
+
+	if ( ! isset( $_POST['lsi_commande_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['lsi_commande_nonce'] ) ), 'lsi_commande' ) ) {
+		$fail();
+	}
+	if ( ! empty( $_POST['website'] ) ) { // champ piège rempli : c'est un robot
+		$fail();
+	}
+
+	$nom     = sanitize_text_field( wp_unslash( $_POST['nom'] ?? '' ) );
+	$email   = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
+	$tel     = sanitize_text_field( wp_unslash( $_POST['telephone'] ?? '' ) );
+	$product = wc_get_product( absint( $_POST['produit'] ?? 0 ) );
+	$qty     = max( 1, absint( $_POST['quantite'] ?? 1 ) );
+	$mode    = sanitize_key( wp_unslash( $_POST['mode'] ?? '' ) );
+	$message = sanitize_textarea_field( wp_unslash( $_POST['message'] ?? '' ) );
+
+	if ( '' === $nom || ! is_email( $email ) || ! $product || ! in_array( $mode, array( 'envoi', 'retrait' ), true ) || empty( $_POST['consent'] ) ) {
+		$fail();
+	}
+
+	$body = implode( "\n", array(
+		'Nom : ' . $nom,
+		'Email : ' . $email,
+		'Téléphone : ' . ( $tel ? $tel : '-' ),
+		'Livre : ' . $product->get_name() . ' (' . get_permalink( $product->get_id() ) . ')',
+		'Quantité : ' . $qty,
+		'Mode : ' . ( 'envoi' === $mode ? 'Envoi' : 'Retrait' ),
+		'',
+		'Message :',
+		$message ? $message : '-',
+	) );
+
+	$sent = wp_mail(
+		get_option( 'admin_email' ),
+		'Demande de commande : ' . $product->get_name(),
+		$body,
+		array( 'Reply-To: ' . $nom . ' <' . $email . '>' )
+	);
+
+	if ( ! $sent ) {
+		$fail();
+	}
+	wp_safe_redirect( add_query_arg( 'commande', 'ok', $back ) );
+	exit;
+}
+add_action( 'admin_post_nopriv_lsi_commande', 'lessavoirsinedits_handle_commande' );
+add_action( 'admin_post_lsi_commande', 'lessavoirsinedits_handle_commande' );
+
 add_filter( 'woocommerce_product_add_to_cart_url', function ( $url, $product ) {
-	return lessavoirsinedits_interest_mailto( $product );
+	return lessavoirsinedits_interest_url( $product );
 }, 10, 2 );
 
 add_filter( 'woocommerce_product_add_to_cart_text', function ( $text, $product ) {
@@ -331,3 +430,176 @@ add_action( 'wp_enqueue_scripts', function () {
 		);
 	}
 }, 30 );
+
+/**
+ * Liste admin des produits : la colonne « Auteur·es » (taxonomie lsi_author)
+ * reçoit une largeur fixe et un retour à la ligne, sinon WordPress la compresse
+ * au point de rendre son titre illisible.
+ */
+add_action( 'admin_head-edit.php', function () {
+	global $typenow;
+	if ( 'product' !== $typenow ) {
+		return;
+	}
+	?>
+	<style>
+		.wp-list-table th.column-taxonomy-lsi_author,
+		.wp-list-table td.column-taxonomy-lsi_author {
+			width: 170px;
+			white-space: normal;
+		}
+	</style>
+	<?php
+} );
+
+/**
+ * Les boutons écrits en chemin relatif à la racine (href="/boutique/") ne
+ * fonctionnent que si le site est à la racine du domaine. On les rattache à
+ * l'adresse réelle du site, ce qui marche aussi en sous-dossier (XAMPP).
+ */
+add_filter( 'render_block_core/button', 'lessavoirsinedits_site_relative_hrefs' );
+add_filter( 'render_block_core/paragraph', 'lessavoirsinedits_site_relative_hrefs' );
+
+function lessavoirsinedits_site_relative_hrefs( $block_content ) {
+	$base = untrailingslashit( home_url( '/' ) );
+	return preg_replace( '#href="/(?!/)#', 'href="' . $base . '/', $block_content );
+}
+
+/*
+ * Proposition de manuscrit (shortcode [lsi_manuscrit_form]).
+ * Même principe que la demande de commande : vérifications, email à l'admin,
+ * aucune donnée stockée. Le texte n'est pas joint (taille des fichiers) :
+ * le formulaire demande un résumé et un lien facultatif vers le manuscrit.
+ */
+add_shortcode( 'lsi_manuscrit_form', function () {
+	$status = isset( $_GET['manuscrit'] ) ? sanitize_key( wp_unslash( $_GET['manuscrit'] ) ) : '';
+
+	ob_start();
+	if ( 'ok' === $status ) {
+		echo '<p class="lsi-form-notice lsi-form-ok">' . esc_html__( 'Merci pour votre proposition. Notre comité de lecture l’examinera et nous vous répondrons.', 'lessavoirsinedits' ) . '</p>';
+	} elseif ( 'erreur' === $status ) {
+		echo '<p class="lsi-form-notice lsi-form-error">' . esc_html__( 'Le formulaire est incomplet ou n’a pas pu être envoyé. Merci de vérifier les champs obligatoires.', 'lessavoirsinedits' ) . '</p>';
+	}
+	?>
+	<form class="lsi-commande-form lsi-manuscrit-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+		<input type="hidden" name="action" value="lsi_manuscrit">
+		<?php wp_nonce_field( 'lsi_manuscrit', 'lsi_manuscrit_nonce' ); ?>
+		<p class="lsi-hp" aria-hidden="true" style="position:absolute;left:-9999px;">
+			<label>Ne pas remplir : <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+		</p>
+
+		<p>
+			<label for="lsi-m-nom"><?php esc_html_e( 'Nom et prénom', 'lessavoirsinedits' ); ?> *</label>
+			<input id="lsi-m-nom" type="text" name="nom" required autocomplete="name">
+		</p>
+		<p>
+			<label for="lsi-m-email"><?php esc_html_e( 'Adresse email', 'lessavoirsinedits' ); ?> *</label>
+			<input id="lsi-m-email" type="email" name="email" required autocomplete="email">
+		</p>
+		<p>
+			<label for="lsi-m-tel"><?php esc_html_e( 'Téléphone (facultatif)', 'lessavoirsinedits' ); ?></label>
+			<input id="lsi-m-tel" type="tel" name="telephone" autocomplete="tel">
+		</p>
+		<p>
+			<label for="lsi-m-profil"><?php esc_html_e( 'Votre pratique', 'lessavoirsinedits' ); ?> *</label>
+			<select id="lsi-m-profil" name="profil" required>
+				<option value=""><?php esc_html_e( 'Choisir', 'lessavoirsinedits' ); ?></option>
+				<option value="professionnel"><?php esc_html_e( 'Professionnel·le', 'lessavoirsinedits' ); ?></option>
+				<option value="benevole"><?php esc_html_e( 'Bénévole', 'lessavoirsinedits' ); ?></option>
+				<option value="autre"><?php esc_html_e( 'Autre', 'lessavoirsinedits' ); ?></option>
+			</select>
+		</p>
+		<p>
+			<label for="lsi-m-titre"><?php esc_html_e( 'Titre de travail du manuscrit', 'lessavoirsinedits' ); ?> *</label>
+			<input id="lsi-m-titre" type="text" name="titre" required>
+		</p>
+		<p>
+			<label for="lsi-m-resume"><?php esc_html_e( 'Résumé de l’ouvrage', 'lessavoirsinedits' ); ?> *</label>
+			<textarea id="lsi-m-resume" name="resume" rows="5" required></textarea>
+		</p>
+		<p>
+			<label for="lsi-m-pages"><?php esc_html_e( 'Nombre de pages environ', 'lessavoirsinedits' ); ?></label>
+			<input id="lsi-m-pages" type="number" name="pages" min="1">
+		</p>
+		<p>
+			<label for="lsi-m-lien"><?php esc_html_e( 'Lien vers le manuscrit (facultatif)', 'lessavoirsinedits' ); ?></label>
+			<input id="lsi-m-lien" type="url" name="lien" placeholder="https://">
+		</p>
+		<p>
+			<label for="lsi-m-message"><?php esc_html_e( 'Message (facultatif)', 'lessavoirsinedits' ); ?></label>
+			<textarea id="lsi-m-message" name="message" rows="3"></textarea>
+		</p>
+		<p class="lsi-form-consent">
+			<label>
+				<input type="checkbox" name="consent" value="1" required>
+				<?php esc_html_e( 'J’accepte que mes données servent uniquement à examiner ma proposition. Elles ne sont ni revendues ni partagées.', 'lessavoirsinedits' ); ?> *
+			</label>
+		</p>
+		<p>
+			<button type="submit" class="lsi-interest-button"><?php esc_html_e( 'Envoyer ma proposition', 'lessavoirsinedits' ); ?></button>
+		</p>
+	</form>
+	<?php
+	return ob_get_clean();
+} );
+
+function lessavoirsinedits_handle_manuscrit() {
+	$back = wp_get_referer() ? wp_get_referer() : home_url( '/proposer-un-manuscrit/' );
+	$back = remove_query_arg( 'manuscrit', $back );
+	$fail = function () use ( $back ) {
+		wp_safe_redirect( add_query_arg( 'manuscrit', 'erreur', $back ) );
+		exit;
+	};
+
+	if ( ! isset( $_POST['lsi_manuscrit_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['lsi_manuscrit_nonce'] ) ), 'lsi_manuscrit' ) ) {
+		$fail();
+	}
+	if ( ! empty( $_POST['website'] ) ) {
+		$fail();
+	}
+
+	$nom     = sanitize_text_field( wp_unslash( $_POST['nom'] ?? '' ) );
+	$email   = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
+	$tel     = sanitize_text_field( wp_unslash( $_POST['telephone'] ?? '' ) );
+	$profil  = sanitize_key( wp_unslash( $_POST['profil'] ?? '' ) );
+	$titre   = sanitize_text_field( wp_unslash( $_POST['titre'] ?? '' ) );
+	$resume  = sanitize_textarea_field( wp_unslash( $_POST['resume'] ?? '' ) );
+	$pages   = absint( $_POST['pages'] ?? 0 );
+	$lien    = esc_url_raw( wp_unslash( $_POST['lien'] ?? '' ) );
+	$message = sanitize_textarea_field( wp_unslash( $_POST['message'] ?? '' ) );
+
+	if ( '' === $nom || ! is_email( $email ) || '' === $titre || '' === $resume || ! in_array( $profil, array( 'professionnel', 'benevole', 'autre' ), true ) || empty( $_POST['consent'] ) ) {
+		$fail();
+	}
+
+	$profils = array( 'professionnel' => 'Professionnel·le', 'benevole' => 'Bénévole', 'autre' => 'Autre' );
+	$body    = implode( "\n", array(
+		'Nom : ' . $nom,
+		'Email : ' . $email,
+		'Téléphone : ' . ( $tel ? $tel : '-' ),
+		'Pratique : ' . $profils[ $profil ],
+		'Titre de travail : ' . $titre,
+		'Pages (environ) : ' . ( $pages ? $pages : '-' ),
+		'Lien vers le manuscrit : ' . ( $lien ? $lien : '-' ),
+		'',
+		'Résumé :',
+		$resume,
+		'',
+		'Message :',
+		$message ? $message : '-',
+	) );
+
+	$sent = wp_mail(
+		get_option( 'admin_email' ),
+		'Proposition de manuscrit : ' . $titre,
+		$body,
+		array( 'Reply-To: ' . $nom . ' <' . $email . '>' )
+	);
+	if ( ! $sent ) {
+		$fail();
+	}
+	wp_safe_redirect( add_query_arg( 'manuscrit', 'ok', $back ) );
+	exit;
+}
+add_action( 'admin_post_nopriv_lsi_manuscrit', 'lessavoirsinedits_handle_manuscrit' );
+add_action( 'admin_post_lsi_manuscrit', 'lessavoirsinedits_handle_manuscrit' );

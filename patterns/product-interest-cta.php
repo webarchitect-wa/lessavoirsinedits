@@ -15,6 +15,6 @@ if ( ! $product ) {
 	return;
 }
 ?>
-<a class="lsi-interest-button" href="<?php echo esc_url( lessavoirsinedits_interest_mailto( $product ) ); ?>">
+<a class="lsi-interest-button" href="<?php echo esc_url( lessavoirsinedits_interest_url( $product ) ); ?>">
 	<?php esc_html_e( 'Je suis intéressé·e', 'lessavoirsinedits' ); ?>
 </a>

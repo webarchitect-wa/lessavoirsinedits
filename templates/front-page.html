@@ -28,29 +28,36 @@
 				<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/boutique/">Découvrir les titres</a></div>
 				<!-- /wp:button -->
 				<!-- wp:button {"className":"is-style-outline"} -->
-				<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="#">Qui sommes-nous ?</a></div>
+				<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="/qui-sommes-nous/">Qui sommes-nous ?</a></div>
 				<!-- /wp:button -->
 			</div>
 			<!-- /wp:buttons -->
 		</div>
 		<!-- /wp:group -->
 
-		<!-- wp:html -->
-		<div class="lsi-hero-covers" aria-hidden="true">
-			<div class="lsi-hero-cover lsi-cover-2">
-				<span class="lsi-cover-brand">LES SAVOIRS INÉDITS</span>
-				<span class="lsi-cover-title">Accompagner sans décider à la place</span>
-				<span class="lsi-cover-author">Luc Morvan</span>
-				<span class="lsi-cover-bar"></span>
+		<!-- wp:query {"queryId":101,"query":{"perPage":2,"pages":1,"offset":0,"postType":"product","order":"desc","orderBy":"date","inherit":false,"taxQuery":null,"search":"","exclude":[],"sticky":"","format":[]},"className":"lsi-hero-covers","layout":{"type":"default"}} -->
+<div class="wp-block-query lsi-hero-covers">
+	<!-- wp:post-template {"layout":{"type":"default"}} -->
+		<!-- wp:group {"className":"lsi-hero-cover","layout":{"type":"flex","orientation":"vertical"}} -->
+		<div class="wp-block-group lsi-hero-cover">
+			<!-- wp:post-featured-image {"isLink":false,"className":"lsi-cover-img"} /-->
+			<!-- wp:group {"className":"lsi-cover-text","layout":{"type":"flex","orientation":"vertical"}} -->
+			<div class="wp-block-group lsi-cover-text">
+			<!-- wp:paragraph {"className":"lsi-cover-brand"} -->
+			<p class="lsi-cover-brand">LES SAVOIRS INÉDITS</p>
+			<!-- /wp:paragraph -->
+			<!-- wp:post-title {"level":3,"isLink":false,"className":"lsi-cover-title"} /-->
+			<!-- wp:post-terms {"term":"lsi_author","className":"lsi-cover-author"} /-->
+			<!-- wp:paragraph {"className":"lsi-cover-bar"} -->
+			<p class="lsi-cover-bar"></p>
+			<!-- /wp:paragraph -->
 			</div>
-			<div class="lsi-hero-cover lsi-cover-1">
-				<span class="lsi-cover-brand">LES SAVOIRS INÉDITS</span>
-				<span class="lsi-cover-title">Entre parents et enseignants</span>
-				<span class="lsi-cover-author">Françoise Sigonneau</span>
-				<span class="lsi-cover-bar"></span>
-			</div>
+			<!-- /wp:group -->
 		</div>
-		<!-- /wp:html -->
+		<!-- /wp:group -->
+	<!-- /wp:post-template -->
+</div>
+<!-- /wp:query -->
 
 	</div>
 	<!-- /wp:group -->
@@ -102,7 +109,7 @@
 			<p class="lsi-eyebrow">LE LIVRE DU MOMENT</p>
 			<!-- /wp:paragraph -->
 
-			<!-- wp:woocommerce/single-product {"productId":14} -->
+			<!-- wp:woocommerce/single-product {"productId":13} -->
 			<div class="wp-block-woocommerce-single-product">
 				<!-- wp:post-title {"level":2,"isLink":true} /-->
 				<!-- wp:woocommerce/product-price /-->
@@ -127,12 +134,12 @@
 		<h2>Actu</h2>
 		<!-- /wp:heading -->
 		<!-- wp:paragraph {"className":"lsi-section-link"} -->
-		<p class="lsi-section-link"><a href="#">Toute l'actualité</a></p>
+		<p class="lsi-section-link"><a href="/category/actualites/">Toute l'actualité</a></p>
 		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
 
-	<!-- wp:query {"queryId":2,"query":{"perPage":3,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":true},"align":"wide","layout":{"type":"grid","columnCount":3}} -->
+	<!-- wp:query {"queryId":2,"query":{"perPage":3,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":true},"align":"wide","layout":{"type":"default"}} -->
 	<div class="wp-block-query alignwide">
 		<!-- wp:post-template {"className":"lsi-actu-grid"} -->
 			<!-- wp:group {"className":"lsi-actu-card","layout":{"type":"constrained"}} -->
@@ -173,7 +180,7 @@
 			<p>Une structure à but non lucratif, née d'un projet soutenu par le Fonds social européen, qui réinvestit chaque vente dans de nouvelles publications.</p>
 			<!-- /wp:paragraph -->
 			<!-- wp:paragraph {"className":"lsi-section-link"} -->
-			<p class="lsi-section-link"><a href="#">Découvrir l'association</a></p>
+			<p class="lsi-section-link"><a href="/qui-sommes-nous/">Découvrir l'association</a></p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:column -->
@@ -223,7 +230,7 @@
 		<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
 		<div class="wp-block-buttons">
 			<!-- wp:button -->
-			<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="#">Proposer un manuscrit</a></div>
+			<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/proposer-un-manuscrit/">Proposer un manuscrit</a></div>
 			<!-- /wp:button -->
 		</div>
 		<!-- /wp:buttons -->

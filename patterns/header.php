@@ -15,7 +15,9 @@
 
 	<!-- wp:group {"align":"wide","style":{"spacing":{"padding":{"top":"var:preset|spacing|20","bottom":"var:preset|spacing|20"}}},"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
 	<div class="wp-block-group alignwide" style="padding-top:var(--wp--preset--spacing--20);padding-bottom:var(--wp--preset--spacing--20)">
-		<!-- wp:site-logo {"width":170,"shouldSyncIcon":false,"className":"lsi-site-logo"} /-->
+		<!-- wp:image {"width":"220px","sizeSlug":"full","linkDestination":"custom","className":"lsi-site-logo"} -->
+<figure class="wp-block-image size-full is-resized lsi-site-logo"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/img/logo-lsi-header.png' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" style="width:220px;height:auto"/></a></figure>
+<!-- /wp:image -->
 	</div>
 	<!-- /wp:group -->
 
@@ -24,7 +26,7 @@
 		<!-- wp:group {"align":"wide","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
 		<div class="wp-block-group alignwide">
 
-			<!-- wp:navigation {"ref":27,"className":"lsi-header-nav","overlayBackgroundColor":"base","overlayTextColor":"contrast","layout":{"type":"flex","justifyContent":"left","flexWrap":"wrap"}} /-->
+			<!-- wp:navigation {"ref":4,"className":"lsi-header-nav","overlayBackgroundColor":"base","overlayTextColor":"contrast","layout":{"type":"flex","justifyContent":"left","flexWrap":"wrap"}} /-->
 
 			<!-- wp:group {"className":"lsi-header-actions","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"right"}} -->
 			<div class="wp-block-group lsi-header-actions">

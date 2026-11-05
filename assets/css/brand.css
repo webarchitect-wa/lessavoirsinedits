@@ -3,7 +3,7 @@
  * Composants non couverts par theme.json : navigation, cartes produits
  * WooCommerce, formulaires, footer, citations, badges.
  * Les couleurs reprennent les custom properties générées par theme.json
- * (--wp--preset--color--*) pour rester compatibles avec le mode sombre.
+ * (--wp--preset--color--*) : une seule palette, celle de theme.json.
  */
 
 :root {
@@ -98,23 +98,23 @@ h1:not( .wp-block-post-title ):not( .wc-block-components-product-name )::after,
 	background: none;
 }
 
+/* Liens du menu : texte violet de la charte sur le dégradé or/orange */
 .wp-block-navigation .wp-block-navigation-item > a,
 .wp-block-navigation .wp-block-navigation-item > .wp-block-navigation-item__content {
-	color: var( --wp--preset--color--text-primary );
+	color: #330033;
 	padding: 15px 24px;
 	border-radius: var( --lsi-radius-md );
 	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Survol et page courante : pastille violette, texte blanc (lisible dans les deux cas) */
 .wp-block-navigation .wp-block-navigation-item > a:hover,
-.wp-block-navigation .wp-block-navigation-item > .wp-block-navigation-item__content:hover {
+.wp-block-navigation .wp-block-navigation-item > .wp-block-navigation-item__content:hover,
+.wp-block-navigation .wp-block-navigation-item.current-menu-item > a,
+.wp-block-navigation .wp-block-navigation-item.current-menu-item > .wp-block-navigation-item__content,
+.wp-block-navigation .wp-block-navigation-item.current-menu-item > a:hover {
 	color: #ffffff;
-	background-color: color-mix( in srgb, var( --wp--preset--color--primary-orange ) 60%, transparent );
-}
-
-.wp-block-navigation .current-menu-item > a {
-	background-color: var( --wp--preset--color--dark-purple );
-	color: #ffffff;
+	background-color: #330033;
 }
 
 /* Actions du header : recherche, compte, panier */
@@ -536,6 +536,58 @@ h1:not( .wp-block-post-title ):not( .wc-block-components-product-name )::after,
 	background: var( --wp--preset--color--primary-orange );
 }
 
+/* Couvertures du hero alimentées par les produits (bloc Requête) */
+.lsi-hero-covers .wp-block-post-template {
+	position: relative;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	height: 360px;
+}
+
+.lsi-hero-covers .wp-block-post-template > li {
+	margin: 0;
+	padding: 0;
+}
+
+/* 1re couverture : teal, à l'arrière-plan à gauche ; 2e : or, au premier plan à droite */
+.lsi-hero-covers .wp-block-post-template > li:nth-child( odd ) .lsi-hero-cover {
+	top: 40px;
+	left: 0;
+	background: linear-gradient( 160deg, #bfe3de 0%, #5fa89d 100% );
+	z-index: 1;
+	opacity: 0.9;
+}
+
+.lsi-hero-covers .wp-block-post-template > li:nth-child( even ) .lsi-hero-cover {
+	top: 0;
+	right: 0;
+	background: linear-gradient( 160deg, #fdf0c4 0%, #f4c66b 100% );
+	z-index: 2;
+}
+
+.lsi-hero-covers .lsi-cover-title,
+.lsi-hero-covers .lsi-cover-title a {
+	margin: 0;
+	color: var( --wp--preset--color--dark-purple );
+	font-family: var( --wp--preset--font-family--playfair );
+	font-size: 1.25rem;
+	font-weight: 700;
+	line-height: 1.25;
+}
+
+.lsi-hero-covers .lsi-cover-author,
+.lsi-hero-covers .lsi-cover-author a {
+	color: var( --wp--preset--color--dark-purple );
+	font-family: var( --wp--preset--font-family--playfair );
+	font-style: italic;
+	text-decoration: none;
+}
+
+.lsi-hero-covers .lsi-cover-brand {
+	margin: 0;
+}
+
 /* --- Carte livre (grille produits) : couverture dégradée + mention de marque --- */
 .wc-block-product-template .wc-block-components-product-image {
 	position: relative;
@@ -544,49 +596,10 @@ h1:not( .wp-block-post-title ):not( .wc-block-components-product-name )::after,
 }
 
 .wc-block-product-template .wc-block-components-product-image img {
-	opacity: 0;
-}
-
-.wc-block-product-template .wc-block-components-product-image::before {
-	content: "LES SAVOIRS INÉDITS";
-	position: absolute;
-	top: 16px;
-	left: 16px;
-	font-size: 0.65rem;
-	font-weight: 700;
-	letter-spacing: 1px;
-	color: var( --wp--preset--color--dark-purple );
-}
-
-.wc-block-product-template .wc-block-components-product-image::after {
-	content: "";
-	position: absolute;
-	bottom: 16px;
-	left: 16px;
-	width: 40px;
-	height: 4px;
-	border-radius: var( --lsi-radius-sm );
-	background: var( --wp--preset--color--primary-orange );
-}
-
-.wc-block-product-template .wc-block-product:nth-of-type( 5n + 1 ) .wc-block-components-product-image {
-	background: linear-gradient( 160deg, #fdf0c4 0%, #f4c66b 100% );
-}
-
-.wc-block-product-template .wc-block-product:nth-of-type( 5n + 2 ) .wc-block-components-product-image {
-	background: linear-gradient( 160deg, #f7c98c 0%, #e8793a 100% );
-}
-
-.wc-block-product-template .wc-block-product:nth-of-type( 5n + 3 ) .wc-block-components-product-image {
-	background: linear-gradient( 160deg, #bfe3de 0%, #5fa89d 100% );
-}
-
-.wc-block-product-template .wc-block-product:nth-of-type( 5n + 4 ) .wc-block-components-product-image {
-	background: linear-gradient( 160deg, #f6c9c3 0%, #dd7a74 100% );
-}
-
-.wc-block-product-template .wc-block-product:nth-of-type( 5n + 5 ) .wc-block-components-product-image {
-	background: linear-gradient( 160deg, #e3d1ec 0%, #a87dc2 100% );
+	opacity: 1;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 /* --- Livre du moment --- */
@@ -651,7 +664,19 @@ h1:not( .wp-block-post-title ):not( .wc-block-components-product-name )::after,
 
 /* --- Actu --- */
 .lsi-actu-grid {
+	display: grid;
+	grid-template-columns: repeat( 3, minmax( 0, 1fr ) );
 	gap: 24px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+.lsi-actu-grid > li {
+	margin: 0;
+	padding: 0;
+	min-width: 0;
 }
 
 .lsi-actu-card {
@@ -709,9 +734,8 @@ h1:not( .wp-block-post-title ):not( .wc-block-components-product-name )::after,
 }
 
 /*
- * Ces cartes sont toujours blanches, y compris en mode sombre (où les
- * jetons dark-purple/contrast sont éclaircis pour les fonds sombres) :
- * on fige donc le texte en couleurs fixes pour rester lisible.
+ * Ces cartes sont toujours blanches : on fige le texte en couleurs fixes
+ * pour rester lisible.
  */
 .lsi-actu-card,
 .lsi-about-card {
@@ -1295,5 +1319,222 @@ input[ type="checkbox" ].wc-block-product-filter-checkbox-list__input {
 @media ( max-width: 600px ) {
 	.lsi-author-grid {
 		grid-template-columns: 1fr;
+	}
+}
+
+/* Couverture réelle (image mise en avant du produit) : elle remplace le texte de la carte */
+.lsi-hero-covers .wp-block-post-template > li .lsi-hero-cover:has( .lsi-cover-img ) {
+	padding: 0;
+	overflow: hidden;
+	background: none;
+}
+
+.lsi-hero-covers .lsi-hero-cover:has( .lsi-cover-img ) .lsi-cover-img {
+	position: absolute;
+	inset: 0;
+	margin: 0;
+}
+
+.lsi-hero-covers .lsi-cover-img img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	margin: 0;
+}
+
+.lsi-hero-covers .lsi-hero-cover:has( .lsi-cover-img ) .lsi-cover-text {
+	display: none;
+}
+
+/* --- Formulaire de demande de commande --- */
+.lsi-commande-form {
+	max-width: 560px;
+	margin: 0 auto;
+}
+
+.lsi-commande-form label {
+	display: block;
+	margin-bottom: 4px;
+	font-weight: 600;
+	color: var( --wp--preset--color--dark-purple );
+}
+
+.lsi-commande-form input:not( [type="checkbox"] ),
+.lsi-commande-form select,
+.lsi-commande-form textarea {
+	width: 100%;
+	padding: 10px 12px;
+	border: 1px solid var( --wp--preset--color--border-light );
+	border-radius: var( --lsi-radius-sm );
+	font: inherit;
+	background: #ffffff;
+}
+
+.lsi-commande-form .lsi-form-consent label {
+	display: flex;
+	gap: 10px;
+	font-weight: 400;
+}
+
+.lsi-form-notice {
+	padding: 12px 16px;
+	border-radius: var( --lsi-radius-sm );
+	font-weight: 600;
+}
+
+.lsi-form-ok {
+	background: #e6f4ea;
+	color: #1d5e2a;
+}
+
+.lsi-form-error {
+	background: #fbe9e7;
+	color: #8a1f14;
+}
+
+/* --- Pied de page clair : fond crème, texte violet de la charte --- */
+.lsi-site-footer {
+	background: linear-gradient( 180deg, #fdf0c4 0%, #fff8e6 100% );
+	color: var( --wp--preset--color--dark-purple );
+	border-top: 4px solid var( --wp--preset--color--primary-gold );
+}
+
+.lsi-site-footer h4 {
+	color: var( --wp--preset--color--dark-purple );
+	font-family: var( --wp--preset--font-family--playfair );
+	font-size: 1.15rem;
+	margin-bottom: 0.9rem;
+}
+
+.lsi-site-footer p {
+	color: #4a2a4a;
+	line-height: 1.6;
+}
+
+.lsi-site-footer a,
+.lsi-footer-links .wp-block-navigation-item > a,
+.lsi-footer-legal-nav .wp-block-navigation-item > a {
+	color: var( --wp--preset--color--dark-purple );
+	text-decoration: none;
+}
+
+.lsi-site-footer a:hover,
+.lsi-footer-links .wp-block-navigation-item > a:hover,
+.lsi-footer-legal-nav .wp-block-navigation-item > a:hover {
+	color: #c2410c;
+	text-decoration: underline;
+}
+
+.lsi-footer-logo img {
+	display: block;
+	width: 180px;
+	height: auto;
+	filter: none;
+}
+
+.lsi-footer-separator {
+	border-top-color: rgba( 51, 0, 51, 0.15 );
+}
+
+.lsi-newsletter-form label {
+	color: #4a2a4a;
+}
+
+.lsi-newsletter-form input[type="email"] {
+	border: 1px solid rgba( 51, 0, 51, 0.25 );
+}
+
+/* Pied de page : liste de liens plus compacte, alignée sur le titre de colonne */
+.lsi-footer-links .wp-block-navigation__container {
+	gap: 0.35rem;
+	align-items: flex-start;
+}
+
+.lsi-footer-links .wp-block-navigation-item > a {
+	padding: 2px 0;
+}
+
+.lsi-site-footer .lsi-footer-separator {
+	border-top: 1px solid rgba( 51, 0, 51, 0.2 );
+	opacity: 1;
+}
+
+/* --- Actus en mobile : une carte par ligne, pleine largeur --- */
+@media ( max-width: 600px ) {
+	.lsi-actu-grid {
+		grid-template-columns: 1fr;
+		gap: 16px;
+	}
+
+	.lsi-actu-card {
+		width: 100%;
+	}
+
+	.lsi-actu-visual {
+		height: 110px;
+	}
+
+	.lsi-actu-card .wp-block-post-title {
+		font-size: 1.2rem;
+		line-height: 1.3;
+	}
+
+	.lsi-actu-card .wp-block-post-excerpt {
+		font-size: 0.95rem;
+		line-height: 1.5;
+	}
+}
+
+/* --- Mobile : page d'accueil --- */
+@media ( max-width: 600px ) {
+	/* Actus : titres et textes centrés, en-tête centré */
+	.lsi-section-header {
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		gap: 6px;
+	}
+
+	.lsi-section-header .lsi-section-link {
+		margin: 0;
+	}
+
+	.lsi-actu-card {
+		text-align: center;
+	}
+
+	.lsi-actu-card .wp-block-post-date {
+		text-align: center;
+	}
+
+	.lsi-actu-card .wp-block-post-title,
+	.lsi-actu-card .wp-block-post-excerpt {
+		text-align: center;
+	}
+
+	/* Produits : titres complets, boutons sur une ligne */
+	.wc-block-product-template .wp-block-post-title {
+		font-size: 1rem;
+		line-height: 1.3;
+		overflow-wrap: anywhere;
+	}
+
+	.wc-block-product-template .wp-block-button__link,
+	.wc-block-product-template .wc-block-components-product-button__button {
+		padding: 10px 12px;
+		font-size: 0.85rem;
+		white-space: nowrap;
+	}
+
+	/* Pied de page : liens légaux centrés et empilés */
+	.lsi-site-footer .wp-block-group.alignwide {
+		justify-content: center;
+		text-align: center;
+	}
+
+	.lsi-footer-legal-nav .wp-block-navigation__container {
+		justify-content: center;
+		flex-wrap: wrap;
 	}
 }
